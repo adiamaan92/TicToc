@@ -7,6 +7,18 @@ While installing you would enter a master password be sure to save it.
 Mysql_connector class acts as an interface for connecting to the mysql server.
 The connection setting are in the config file and the settings will change for your system.(Ping me to get the sample config.py file)
 
+Comment your code.
+Try to pick an algorithm MVCC, TO or TicToc to inmplement them.
+Create a data structure for each specific agorithm.
+
+We will use python data structure as an interface to control the existing tables in the mysql server.
+For example the python implementation of the tictoc algorithm will have a list of list [[primary_id, wts, rts]]
+The database will have the data in the format [primary_id, **columns]
+So when we need to access the records on the table we need to go through the python data structure that validates the
+concurrency using its wts and rts fields. We can implement the logic for validation here and once validated it can go
+forward and allow the access in the table.
+We will plan to run the DB without any specific concurrency
+
 -- TROUBLESHOOT --
 1) Try restarting mysql service if you have any issue with logging in.
 
