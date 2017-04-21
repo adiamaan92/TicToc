@@ -1,6 +1,6 @@
-import tkinter
+from tkinter import *
 
-top = tkinter.Tk()
+top = Tk()
 top.mainloop()
 
 # Test

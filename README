@@ -1,0 +1,12 @@
+Using Python 2.7 as the Project Interpreter, Because of unavailability of Python connector for 3.6
+
+Download the python connector for 2.7 from the mysql website.
+Make sure you have the mysql for your OS downloaded.
+Mysql for windows has a workbench that is like a IDE for Mysql development.
+While installing you would enter a master password be sure to save it.
+Mysql_connector class acts as an interface for connecting to the mysql server.
+The connection setting are in the config file and the settings will change for your system.(Ping me to get the sample config.py file)
+
+-- TROUBLESHOOT --
+1) Try restarting mysql service if you have any issue with logging in.
+
