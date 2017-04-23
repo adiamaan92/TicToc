@@ -15,6 +15,7 @@ class mysql_connector(object):
         self.connection = mysql.connector.connect(user=cfg.mysql_config['user'], password=cfg.mysql_config['password'],
                                                   host=cfg.mysql_config['host'], db=cfg.mysql_config['db'])
         self.cursor = self.connection.cursor()
+        self.connection.autocommit = True
 
     def __enter__(self):
         # print("Connection opened!")
