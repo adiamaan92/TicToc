@@ -1,6 +1,6 @@
 from Tkinter import *
 
-
+# Application class
 class Application(Frame):
     def say_hi(self):
         print("Simulate Clicked!")
