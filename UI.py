@@ -2,17 +2,14 @@ from Tkinter import *
 
 
 class Application(Frame):
-
     def say_hi(self):
         print("Simulate Clicked!")
 
-    def createWidgets(self):
-
+    def create_widgets(self):
         self.hi_there = Button(self)
         self.hi_there["text"] = "Simulate!"
         self.hi_there["command"] = self.say_hi
         self.hi_there.pack()
-
         self.algo_label = Label(self, text="Algorithms available\n Select one..")
         self.algo_label.pack(side="top", fill='both', expand=True, padx=4, pady=4)
 
@@ -26,7 +23,7 @@ class Application(Frame):
     def __init__(self, master=None):
         Frame.__init__(self, master)
         self.pack()
-        self.createWidgets()
+        self.create_widgets()
 
 
 def center_window(width=300, height=200):
@@ -35,9 +32,10 @@ def center_window(width=300, height=200):
     screen_height = root.winfo_screenheight()
 
     # calculate position x and y coordinates
-    x = (screen_width/2) - (width/2)
-    y = (screen_height/2) - (height/2)
+    x = (screen_width / 2) - (width / 2)
+    y = (screen_height / 2) - (height / 2)
     root.geometry('%dx%d+%d+%d' % (width, height, x, y))
+
 
 root = Tk()
 root.title("Concurrency Simulator")
@@ -45,5 +43,3 @@ center_window(600, 500)
 app = Application(master=root)
 app.mainloop()
 root.destroy()
-
-
