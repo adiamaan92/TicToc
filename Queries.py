@@ -5,7 +5,7 @@ from random import Random
 from faker import Faker
 
 from mysql_connector import mysql_connector
-from user import User
+from data import User
 
 fake = Faker()
 fake.seed(5513)

@@ -1,8 +1,10 @@
+# This Transaction is specific to TicToc.
+# If you are going to implement a differnt algorithm right its own Transaction
+
 import time
-import copy
 
 
-class Transaction(object):
+class Transaction_TicToc(object):
     def __init__(self, data_list):
         self.data_list = data_list[:]
         self.status = "Initialized"
@@ -15,9 +17,9 @@ class Transaction(object):
     def read_element(self, check_id, t):
         for i in self.data_list:
             if i.check_id == check_id:
-                self.read_list.append(copy.deepcopy(i))
+                self.read_list.append(i)
                 i.rts = t
-                time.sleep(1)
+                #time.sleep(1)
                 break
 
     # Writes an element using check_id and value is set to change for the change field
@@ -25,9 +27,9 @@ class Transaction(object):
         for i in self.data_list:
             if i.check_id == check_id:
                 i.set_change(change)
-                self.write_list.append(copy.deepcopy(i))
+                self.write_list.append(i)
                 i.wts = t
-                time.sleep(1)
+                #time.sleep(1)
                 break
 
     # Sets the status of the transaction to aborted
