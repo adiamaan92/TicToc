@@ -9,12 +9,12 @@ class Application(Frame):
                         #LEFT GRID
         # algorithms grid
         self.algo_label = Label(self, text="Please select one algorithm")
-        self.algo_label.grid(row=0, column=0, columnspan=2, sticky=E)
+        self.algo_label.grid(row=0, column=0, columnspan=2, sticky=W)
 
         self.c1 = Checkbutton(self, text="TicToc")
-        self.c1.grid(row=1, column=0, columnspan=2, sticky=E)
+        self.c1.grid(row=1, column=0, columnspan=2, sticky=W)
         self.c1 = Checkbutton(self, text="TO")
-        self.c1.grid(row=2, column=0, columnspan=2, sticky=E)
+        self.c1.grid(row=2, column=0, columnspan=2, sticky=W)
 
                #CENTER GRID
         # to read text entered in the text box
@@ -34,20 +34,19 @@ class Application(Frame):
             #RIGHT GRID
         #Benchmarks grid
         self.bench_marks = Label(self, text="Please select one Benchmark tool")
-        self.bench_marks.grid(row=0, column=4, columnspan=2, sticky=W)
+        self.bench_marks.grid(row=0, column=4, columnspan=2, sticky=E)
 
         self.c1 = Checkbutton(self, text="YCSB")
-        self.c1.grid(row=1, column=4, columnspan=2, sticky=W)
+        self.c1.grid(row=1, column=4, columnspan=2, sticky=E)
         self.c2 = Checkbutton(self, text="TPC-C")
-        self.c2.grid(row=2, column=4, columnspan=2, sticky=W)
+        self.c2.grid(row=2, column=4, columnspan=2, sticky=E)
 
 
         #Quit button
-        self.Quit = Button(self)
-        self.Quit["text"] = "Quit"
-        self.Quit["fg"] = "red"
-        self.Quit["command"] = self.quit
-        self.Quit.place(rely=1.0, relx=1.0, x=0, y=0, anchor=SE)
+        self.Quit = Button(self, text='Exit application', fg="red", bg="black", command=self.quit)
+        self.Quit.grid(row=3, column=2, columnspan=2, sticky=W+E+N+S)
+
+
 
     def __init__(self, master=None):
         Frame.__init__(self, master)
