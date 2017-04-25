@@ -8,21 +8,20 @@ class Application(Frame):
         print("Simulate Clicked!")
 
     def create_widgets(self):
-        self.hi_there = Button(self)
+        #self.hi_there = Button(self)
         # self.hi_there["text"] = "Simulate!"
         # self.hi_there["command"] = self.say_hi
-        topFrame = Frame(root)
-        topFrame.pack()
-        bottomFrame = Frame(root)
-        bottomFrame.pack(side=BOTTOM)
-        self.button1 = Button(bottomFrame, text="simulate", fg="black", bg="green")
+        #self.hi_there.pack()
+        self.button1 = Button(self, text="simulate", fg="black", bg="green")
         self.button1.pack(side=BOTTOM)
         # on left clicking simulate execute the function name specified in the parameter
         # button1.bind("<Button-1", function name)
         #transaction entry box
         self.label1 = Label(self, text="Please Enter transaction in the given box")
         self.entrybox = Entry(self)
-        self.hi_there.pack()
+        self.label1.pack(side=TOP)
+        self.entrybox.pack(side=TOP)
+
         self.algo_label = Label(self, text="Algorithms available\n Select one..")
         self.algo_label.pack(side="left", fill='both', expand=True, padx=4, pady=4)
 
