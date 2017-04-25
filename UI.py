@@ -65,7 +65,7 @@ def center_window(width=100, height=100):
 #main window
 root = Tk()
 root.title("Concurrency Simulator")
-center_window(600, 500)
+center_window(600, 200)
 app = Application(master=root)
 #continuously run window
 app.mainloop()
