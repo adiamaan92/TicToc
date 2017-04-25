@@ -27,11 +27,21 @@ class Application(Frame):
 
         self.c1 = Checkbutton(self, text="TicToc")
         self.c1.pack(side="left")
+        self.c1 = Checkbutton(self, text="TO")
+        self.c1.pack(side="left")
+
+        self.bench_marks = Label(self, text="Please select the benchmark \n Select one..")
+        self.bench_marks.pack(side="left", fill='both', expand=True, padx=4, pady=4)
+
+        self.c1 = Checkbutton(self, text="YCSB")
+        self.c1.pack(side="left")
+        self.c1 = Checkbutton(self, text="TPC-C")
+        self.c1.pack(side="left")
 
 
 
         self.Quit = Button(self)
-        self.Quit["text"] = "Quit?"
+        self.Quit["text"] = "Quit"
         self.Quit["fg"] = "red"
         self.Quit["command"] = self.quit
         self.Quit.place(rely=1.0, relx=1.0, x=0, y=0, anchor=SE)
@@ -42,7 +52,7 @@ class Application(Frame):
         self.create_widgets()
 
 
-def center_window(width=300, height=200):
+def center_window(width=100, height=100):
     # get screen width and height
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
