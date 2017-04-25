@@ -1,3 +1,9 @@
+# All tables in the database should have a releveant datastructure created like this
+# It can have any number of fields,  but check_id and change are the important fields
+# check_id is the primary key in a table and change is the field that you want to change
+# only the check_id can be used to access the records and the change is the only field that
+# can be changed during the process
+
 class User(object):
     def __init__(self, user_id, name, age, wts=0, rts=0):
         self.user_id = user_id
@@ -9,10 +15,6 @@ class User(object):
         self.lock = False
         self.change = self.name
 
-    def setchange(self, change):
-        self.name = self.change
-        self.change = change
-
-
-
-
+    # Atomic operation to make sure both the fields change at once
+    def set_change(self, change):
+        self.name, self.change = change, change

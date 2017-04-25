@@ -14,9 +14,6 @@ myPRNG = Random(5513)
 
 # Populates a sample table with a unique id, name and age
 # makes sure a table user is created in your local my sql db
-# Test
-
-
 def populate_user(n, db=True):
     user_list = list()
     with mysql_connector() as m:
