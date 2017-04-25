@@ -71,7 +71,7 @@ class Tictoc(object):
             write_element.lock = False
         return True
 
-    # Goes line by line of the command and handles the overall logic
+    # Goes line by line of the command and handles the overall logic.
     def control_logic(self, T1, T2, text):
         set_time = 1
         self.algo_parser(text)
