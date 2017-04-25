@@ -22,7 +22,7 @@ class Application(Frame):
         self.label1.pack(side=TOP)
         self.entrybox.pack(side=TOP)
 
-        self.algo_label = Label(self, text="Algorithms available\n Select one..")
+        self.algo_label = Label(self, text="Please select the Available algorithms\n Select one..")
         self.algo_label.pack(side="left", fill='both', expand=True, padx=4, pady=4)
 
         self.c1 = Checkbutton(self, text="TicToc")
@@ -30,7 +30,7 @@ class Application(Frame):
         self.c1 = Checkbutton(self, text="TO")
         self.c1.pack(side="left")
 
-        self.bench_marks = Label(self, text="Please select the benchmark \n Select one..")
+        self.bench_marks = Label(self, text="Please select the Benchmark tool \n Select one..")
         self.bench_marks.pack(side="left", fill='both', expand=True, padx=4, pady=4)
 
         self.c1 = Checkbutton(self, text="YCSB")
@@ -65,7 +65,7 @@ def center_window(width=100, height=100):
 #main window
 root = Tk()
 root.title("Concurrency Simulator")
-center_window(600, 200)
+center_window(650, 200)
 app = Application(master=root)
 #continuously run window
 app.mainloop()
