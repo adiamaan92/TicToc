@@ -19,6 +19,9 @@ class Application(Frame):
         self.button1.pack(side=BOTTOM)
         # on left clicking simulate execute the function name specified in the parameter
         # button1.bind("<Button-1", function name)
+        #transaction entry box
+        self.label1 = Label(self, text="Please Enter transaction in the given box")
+        self.entrybox = Entry(self)
         self.hi_there.pack()
         self.algo_label = Label(self, text="Algorithms available\n Select one..")
         self.algo_label.pack(side="left", fill='both', expand=True, padx=4, pady=4)
