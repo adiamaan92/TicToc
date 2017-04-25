@@ -4,42 +4,45 @@ from tkinter import *
 
 # Application class
 class Application(Frame):
-    def say_hi(self):
-        print("Simulate Clicked!")
 
     def create_widgets(self):
-        #self.hi_there = Button(self)
-        # self.hi_there["text"] = "Simulate!"
-        # self.hi_there["command"] = self.say_hi
-        #self.hi_there.pack()
-        self.button1 = Button(self, text="simulate", fg="black", bg="green")
-        self.button1.pack(side=BOTTOM)
-        # on left clicking simulate execute the function name specified in the parameter
-        # button1.bind("<Button-1", function name)
-        #transaction entry box
-        self.label1 = Label(self, text="Please Enter transaction in the given box")
-        self.entrybox = Entry(self)
-        self.label1.pack(side=TOP)
-        self.entrybox.pack(side=TOP)
-
-        self.algo_label = Label(self, text="Please select the Available algorithms\n Select one..")
-        self.algo_label.pack(side="left", fill='both', expand=True, padx=4, pady=4)
+                        #LEFT GRID
+        # algorithms grid
+        self.algo_label = Label(self, text="Please select one algorithm")
+        self.algo_label.grid(row=0, column=0, columnspan=2, sticky=E)
 
         self.c1 = Checkbutton(self, text="TicToc")
-        self.c1.pack(side="left")
+        self.c1.grid(row=1, column=0, columnspan=2, sticky=E)
         self.c1 = Checkbutton(self, text="TO")
-        self.c1.pack(side="left")
+        self.c1.grid(row=2, column=0, columnspan=2, sticky=E)
 
-        self.bench_marks = Label(self, text="Please select the Benchmark tool \n Select one..")
-        self.bench_marks.pack(side="left", fill='both', expand=True, padx=4, pady=4)
+               #CENTER GRID
+        # to read text entered in the text box
+        self.usertext = StringVar()
+        #transaction entry box
+        self.label1 = Label(self, text="Please Enter transaction in the given box" )
+        self.label1.grid(row=0, column=2, columnspan=2, sticky=W+E+N+S,)
+
+        self.entrybox = Text(self, width = 35, height = 5, wrap = WORD,)
+        self.entrybox.grid(row=1, column=2, columnspan=2, sticky=W+E+N+S)
+
+        self.button1 = Button(self, text="simulate", fg="black", bg="green")
+        self.button1.grid(row=2, column=2, columnspan=2, sticky=W+E+N+S)
+        # on left clicking simulate execute the function name specified in the parameter
+        # button1.bind("<Button-1", function name)
+
+            #RIGHT GRID
+        #Benchmarks grid
+        self.bench_marks = Label(self, text="Please select one Benchmark tool")
+        self.bench_marks.grid(row=0, column=4, columnspan=2, sticky=W)
 
         self.c1 = Checkbutton(self, text="YCSB")
-        self.c1.pack(side="left")
-        self.c1 = Checkbutton(self, text="TPC-C")
-        self.c1.pack(side="left")
+        self.c1.grid(row=1, column=4, columnspan=2, sticky=W)
+        self.c2 = Checkbutton(self, text="TPC-C")
+        self.c2.grid(row=2, column=4, columnspan=2, sticky=W)
 
 
-
+        #Quit button
         self.Quit = Button(self)
         self.Quit["text"] = "Quit"
         self.Quit["fg"] = "red"
@@ -48,7 +51,7 @@ class Application(Frame):
 
     def __init__(self, master=None):
         Frame.__init__(self, master)
-        self.pack()
+        self.grid()
         self.create_widgets()
 
 
