@@ -4,9 +4,6 @@ import re
 class Tictoc(object):
     def __init__(self, n):
         self.data_list = n[:]
-        self.x = 0
-        self.y = 0
-        self.command_list = list()  # A list of list with transaction object, command, and access object
 
     # Parses the transaction list and generates the commands in the form of list which is stored in the
     # classes's command_list
@@ -72,22 +69,21 @@ class Tictoc(object):
         return True
 
     # Goes line by line of the command and handles the overall logic.
-    def control_logic(self, T1, T2, text):
+    def control_logic(self, trans_dict, arg_list, command_list):
         set_time = 1
-        self.algo_parser(text)
-        for transaction, command, records in self.command_list:
-            tran = T1 if transaction == 1 else T2
-            tran_test = "T1" if transaction == 1 else "T2"
-            record = self.x if records == '(X)' else self.y
-            if command == 'READ':
+        for command, transaction, records in command_list:
+            t = "T" + str(transaction)
+            tran = trans_dict[t]
+            record = arg_list[records] if records is not None else None
+            if command == 'R':
                 tran.abort() if self.is_locked(record) else tran.read_element(record, t=set_time)
                 set_time += 1
-            elif command == 'WRITE':
+            elif command == 'W':
                 tran.abort() if self.is_locked(record) else tran.write_element(record, "Placeholder", t=set_time)
                 set_time += 1
-            elif command == 'COMMIT':
+            elif command == 'C':
                 set_time += 1
                 if self.validate_transaction(tran):
-                    print("Transaction {} successfully validated and COMMITED".format(tran_test))
+                    print("Transaction {} successfully validated and COMMITED".format(t))
                 else:
-                    print("Transaction {} has been ABORTED".format(tran_test))
+                    print("Transaction {} has been ABORTED".format(t))
