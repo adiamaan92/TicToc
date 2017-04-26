@@ -4,51 +4,53 @@ from tkinter import *
 
 # Application class
 class Application(Frame):
-    def say_hi(self):
-        print("Simulate Clicked!")
 
     def create_widgets(self):
-        #self.hi_there = Button(self)
-        # self.hi_there["text"] = "Simulate!"
-        # self.hi_there["command"] = self.say_hi
-        #self.hi_there.pack()
+                        #LEFT GRID
+        # algorithms grid
+        self.algo_label = Label(self, text="Please select one algorithm")
+        self.algo_label.grid(row=0, column=0, columnspan=2, sticky=W)
+        self.c1 = Checkbutton(self, text="TicToc")
+        self.c1.grid(row=1, column=0, columnspan=2, sticky=W)
+        self.c1 = Checkbutton(self, text="TO")
+        self.c1.grid(row=2, column=0, columnspan=2, sticky=W)
+               #CENTER GRID
+        # to read text entered in the text box
+        self.usertext = StringVar()
+        #transaction entry box
+        self.label1 = Label(self, text="Please Enter transaction in the given box" )
+        self.label1.grid(row=0, column=2, columnspan=2, sticky=W+E+N+S,)
+        self.entrybox = Text(self, width = 35, height = 10, wrap = WORD)
+        self.entrybox.grid(row=1, column=2, columnspan=2, sticky=W+E+N+S)
+        #adding scrollbar to the box
+        self.scroll = Scrollbar(self, orient="vertical", command=self.entrybox.yview)
+        self.scroll.grid(row=1,column=4,columnspan=1, sticky=W+E+N+S)
+        self.entrybox['yscrollcommand'] = "scroll.set"
         self.button1 = Button(self, text="simulate", fg="black", bg="green")
-        self.button1.pack(side=BOTTOM)
+        self.button1.grid(row=2, column=2, columnspan=2, sticky=W+E+N+S)
         # on left clicking simulate execute the function name specified in the parameter
         # button1.bind("<Button-1", function name)
-        #transaction entry box
-        self.label1 = Label(self, text="Please Enter transaction in the given box")
-        self.entrybox = Entry(self)
-        self.label1.pack(side=TOP)
-        self.entrybox.pack(side=TOP)
 
-        self.algo_label = Label(self, text="Please select the Available algorithms\n Select one..")
-        self.algo_label.pack(side="left", fill='both', expand=True, padx=4, pady=4)
-
-        self.c1 = Checkbutton(self, text="TicToc")
-        self.c1.pack(side="left")
-        self.c1 = Checkbutton(self, text="TO")
-        self.c1.pack(side="left")
-
-        self.bench_marks = Label(self, text="Please select the Benchmark tool \n Select one..")
-        self.bench_marks.pack(side="left", fill='both', expand=True, padx=4, pady=4)
+            #RIGHT GRID
+        #Benchmarks grid
+        self.bench_marks = Label(self, text="Please select one Benchmark tool")
+        self.bench_marks.grid(row=0, column=5, columnspan=2, sticky=E)
 
         self.c1 = Checkbutton(self, text="YCSB")
-        self.c1.pack(side="left")
-        self.c1 = Checkbutton(self, text="TPC-C")
-        self.c1.pack(side="left")
+        self.c1.grid(row=1, column=4, columnspan=2, sticky=E)
+        self.c2 = Checkbutton(self, text="TPC-C")
+        self.c2.grid(row=2, column=4, columnspan=2, sticky=E)
 
 
+        #Quit button
+        self.Quit = Button(self, text='Exit application', fg="red", bg="black", command=self.quit)
+        self.Quit.grid(row=3, column=2, columnspan=2, sticky=W+E+N+S)
 
-        self.Quit = Button(self)
-        self.Quit["text"] = "Quit"
-        self.Quit["fg"] = "red"
-        self.Quit["command"] = self.quit
-        self.Quit.place(rely=1.0, relx=1.0, x=0, y=0, anchor=SE)
+
 
     def __init__(self, master=None):
         Frame.__init__(self, master)
-        self.pack()
+        self.grid()
         self.create_widgets()
 
 
@@ -65,7 +67,8 @@ def center_window(width=100, height=100):
 #main window
 root = Tk()
 root.title("Concurrency Simulator")
-center_window(650, 200)
+root.configure(background="yellow")
+#center_window(650, 400)
 app = Application(master=root)
 #continuously run window
 app.mainloop()
