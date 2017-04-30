@@ -1,10 +1,10 @@
 import copy
 import re
 
+import scenarios_tictoc as scenarios
 from Queries import populate_user
 from Tictoc import Tictoc
 from Transaction import Transaction_TicToc
-import scenarios
 
 no_transactions = 0
 user_list = populate_user(100, db=True)
@@ -13,7 +13,7 @@ arg_list = dict()
 command_list = list()
 temp_list = copy.deepcopy(user_list)
 algorithm = Tictoc(temp_list)
-text = scenarios.scene8.splitlines()
+text = scenarios.scene7.splitlines()
 
 
 def algo_parser(text):
@@ -44,4 +44,3 @@ for i in range(1, no_transactions + 1):
 # TODO : get more examples for serialization and non serialization transaction to make a robust test
 
 algorithm.control_logic(Tran_dict, arg_list, command_list)
-

@@ -78,4 +78,4 @@ class Tictoc(object):
                     commit_table(tran)
                     print("### Transaction {} successfully validated and COMMITED ###".format(t))
                 else:
-                     print("!!! Transaction {} has been ABORTED !!!".format(t))
+                    print("!!! Transaction {} has been ABORTED !!!".format(t))
