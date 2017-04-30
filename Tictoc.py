@@ -1,21 +1,9 @@
-import re
+from Queries import commit_table
 
 
 class Tictoc(object):
     def __init__(self, n):
         self.data_list = n[:]
-
-    # Parses the transaction list and generates the commands in the form of list which is stored in the
-    # classes's command_list
-    def algo_parser(self, text):
-        x_match = re.match(r'X = (\d+)', text[0])
-        y_match = re.match(r'Y = (\d+)', text[1])
-        self.x = int(x_match.group(1))
-        self.y = int(y_match.group(1))
-        for i in range(2, len(text)):
-            temp_match = re.match(r'(.*)(\d)(\((.*)?\))?', text[i])
-            self.command_list.append([int(temp_match.group(2)), temp_match.group(1), temp_match.group(3)])
-            # print("dummy")
 
     # returns a boolean of whether a records with a given check_id is locked
     def is_locked(self, check_id):
@@ -76,14 +64,18 @@ class Tictoc(object):
             tran = trans_dict[t]
             record = arg_list[records] if records is not None else None
             if command == 'R':
-                tran.abort() if self.is_locked(record) else tran.read_element(record, t=set_time)
+                tran.abort() if self.is_locked(record) else tran.read_element(set_time, record)
+                print("     Transaction {} has read {}th record".format(t, record))
                 set_time += 1
             elif command == 'W':
-                tran.abort() if self.is_locked(record) else tran.write_element(record, "Placeholder", t=set_time)
+                print("--- Transaction {} ---".format(t))
+                tran.abort() if self.is_locked(record) else tran.write_element(record, set_time)
+                print("     Transaction {} has written {}th record locally".format(t, record))
                 set_time += 1
             elif command == 'C':
                 set_time += 1
                 if self.validate_transaction(tran):
-                    print("Transaction {} successfully validated and COMMITED".format(t))
+                    commit_table(tran)
+                    print("### Transaction {} successfully validated and COMMITED ###".format(t))
                 else:
-                    print("Transaction {} has been ABORTED".format(t))
+                     print("!!! Transaction {} has been ABORTED !!!".format(t))

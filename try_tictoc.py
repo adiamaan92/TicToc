@@ -4,58 +4,16 @@ import re
 from Queries import populate_user
 from Tictoc import Tictoc
 from Transaction import Transaction_TicToc
+import scenarios
 
 no_transactions = 0
-user_list = populate_user(100, db=False)
+user_list = populate_user(100, db=True)
 Tran_dict = dict()
 arg_list = dict()
 command_list = list()
 temp_list = copy.deepcopy(user_list)
 algorithm = Tictoc(temp_list)
-
-text = 'T = 5\n' \
-       'X = 0\n' \
-       'Y = 1\n' \
-       'READ1(X)\n' \
-       'WRITE2(X)\n' \
-       'COMMIT2\n' \
-       'WRITE1(Y)\n' \
-       'COMMIT1\n'
-
-# Example of serialization - successfull run
-text1 = 'X = 0\n' \
-       'Y = 1\n' \
-       'READ1(X)\n' \
-       'WRITE2(X)\n' \
-       'COMMIT2\n' \
-       'WRITE1(Y)\n' \
-       'COMMIT1\n'
-
-# Runs Successfully
-text2 = 'X = 56\n' \
-        'Y = 64\n' \
-        'READ1(X)\n' \
-        'WRITE1(X)\n' \
-        'READ2(X)\n' \
-        'WRITE2(X)\n' \
-        'READ1(Y)\n' \
-        'WRITE1(Y)\n' \
-        'COMMIT1\n' \
-        'READ2(Y)\n' \
-        'WRITE2(Y)\n' \
-        'COMMIT2\n'
-
-# Example of non-serialization - T1 fails
-text4 = 'T = 2\n' \
-        'X = 0\n' \
-        'Y = 1\n' \
-        'READ1(X)\n' \
-        'READ2(X)\n' \
-        'WRITE2(X)\n' \
-        'WRITE1(X)\n' \
-        'COMMIT2\n' \
-        'COMMIT1\n'
-text = text4.splitlines()
+text = scenarios.text.splitlines()
 
 
 def algo_parser(text):
@@ -87,4 +45,3 @@ for i in range(1, no_transactions + 1):
 
 algorithm.control_logic(Tran_dict, arg_list, command_list)
 
-print("Hey dummy")
