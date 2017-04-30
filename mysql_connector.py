@@ -4,7 +4,7 @@ import mysql.connector
 
 class mysql_connector(object):
 
-    # Constructor that reads the config file and establishes the connection with the local
+    # Constructor that reads the config.py file and establishes the connection with the local
     # mySQL DB running on the local host
     # enter and exist is used to enable the connection to be established like
     # with mysql() as m:

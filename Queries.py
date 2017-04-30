@@ -39,7 +39,8 @@ def commit_table(transaction):
         for i in transaction.data_list:
                 if i.wts is not 0:
                     table_name = type(i).__name__.upper()
-                    execution_string = "UPDATE " + table_name + " SET NAME = '" + i.name + "' WHERE ID = " + str(i.user_id) + ";"
+                    execution_string = "UPDATE " + table_name + " SET NAME = '" + i.name + "' WHERE USER_ID = " \
+                                       + str(i.user_id) + ";"
                     m.cursor.execute(execution_string)
                     m.connection.commit()
                     break

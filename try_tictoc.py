@@ -13,7 +13,7 @@ arg_list = dict()
 command_list = list()
 temp_list = copy.deepcopy(user_list)
 algorithm = Tictoc(temp_list)
-text = scenarios.text.splitlines()
+text = scenarios.scene8.splitlines()
 
 
 def algo_parser(text):

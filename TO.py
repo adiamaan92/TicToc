@@ -2,6 +2,7 @@
 # unique timestamp keys
 from Queries import commit_table
 
+
 class TimeStamp(object):
     def __init__(self, data_list):
         self.data_list = data_list
@@ -10,7 +11,7 @@ class TimeStamp(object):
 
     # Goes line by line of the command and handles the overall logic.
     def control_logic(self, trans_dict, arg_list, command_list):
-        for command, transaction, records in command_list:
+        for transaction, command, records in command_list:
             t = "T" + str(transaction)
             tran = trans_dict[t]
             record = arg_list[records] if records is not None else None
