@@ -246,48 +246,46 @@ def initiate_transaction(trx_list):
         Tran_dict[key] = Transaction_TS(set_time, algorithm2)
 
 
-def algo_parser(text, flag):
-    global no_transactions
-    if flag == "tictoc":
-        no_transactions = 0
-        for i in text:
-            if re.match(r'T\s=\s\d+', i):
-                trx_match = re.match(r'T\s=\s(\d+)', i)
-                no_transactions = int(trx_match.group(1))
-            elif re.match(r'.\s=\s\d+', i):
-                arg_match = re.match(r'(.)\s=\s(\d+)', i)
-                arg_list[arg_match.group(1)] = int(arg_match.group(2))
-            elif re.match(r'READ(\d+)\(.\)', i):
-                read_match = re.match(r'READ(\d+)\((.)\)?', i)
-                command_list.append(['R', read_match.group(1), read_match.group(2)])
-            elif re.match(r'WRITE(\d+)\(.\)', i):
-                write_match = re.match(r'WRITE(\d+)\((.)\)?', i)
-                command_list.append(['W', write_match.group(1), write_match.group(2)])
-            elif re.match(r'COMMIT(\d+)', i):
-                commit_match = re.match(r'COMMIT(\d+)', i)
-                command_list.append(['C', commit_match.group(1), None])
-    else:
-        no_transactions = 0
-        for i in text:
-            if re.match(r'^T\d+,', i):
-                trx_list = re.findall(r'T(\d)', i)
-                initiate_transaction(trx_list)
-            elif re.match(r'T\s=\s\d+', i):
-                trx_match = re.match(r'T\s=\s(\d+)', i)
-                no_transactions = int(trx_match.group(1))
-            elif re.match(r'.\s=\s\d+', i):
-                arg_match = re.match(r'(.)\s=\s(\d+)', i)
-                arg_list[arg_match.group(1)] = int(arg_match.group(2))
-            elif re.match(r'READ(\d+)\(.\)', i):
-                read_match = re.match(r'READ(\d+)\((.)\)?', i)
-                command_list.append(['R', read_match.group(1), read_match.group(2)])
-            elif re.match(r'WRITE(\d+)\(.\)', i):
-                write_match = re.match(r'WRITE(\d+)\((.)\)?', i)
-                command_list.append(['W', write_match.group(1), write_match.group(2)])
-            elif re.match(r'COMMIT(\d+)', i):
-                commit_match = re.match(r'COMMIT(\d+)', i)
-                command_list.append(['C', commit_match.group(1), None])
+def initiate_to(trx_list, to_var):
+    global set_time
+    set_time = 0
+    if to_var == 1:
+        for i in trx_list:
+            set_time += 1
+            key = "T" + str(i)
+            Tran_dict[key] = Transaction_TS(set_time, algorithm)
 
+
+def initiate_tictoc(no_transactions, tictoc_var):
+    if tictoc_var == 1:
+        for i in range(1, no_transactions + 1):
+            key = "T" + str(i)
+            Tran_dict[key] = Transaction_TicToc(copy.deepcopy(user_list))
+
+
+def algo_parser(text, tictoc_var, to_var,):
+    global no_transactions, command_list, arg_list, Tran_dict
+    command_list, arg_list, Tran_dict = list(), dict(), dict()
+    for i in text:
+        if re.match(r'^T\d+,', i):
+            trx_list = re.findall(r'T(\d+)', i)
+            initiate_to(trx_list, to_var)
+        elif re.match(r'T\s=\s\d+', i):
+            trx_match = re.match(r'T\s=\s(\d+)', i)
+            no_transactions = int(trx_match.group(1))
+            initiate_tictoc(no_transactions, tictoc_var)
+        elif re.match(r'^.\s=\s\d+$', i):
+            arg_match = re.match(r'(.)\s=\s(\d+)', i)
+            arg_list[arg_match.group(1)] = int(arg_match.group(2))
+        elif re.match(r'READ(\d+)\(.\)', i):
+            read_match = re.match(r'READ(\d+)\((.)\)?', i)
+            command_list.append(['R', read_match.group(1), read_match.group(2)])
+        elif re.match(r'WRITE(\d+)\(.\)', i):
+            write_match = re.match(r'WRITE(\d+)\((.)\)?', i)
+            command_list.append(['W', write_match.group(1), write_match.group(2)])
+        elif re.match(r'COMMIT(\d+)', i):
+            commit_match = re.match(r'COMMIT(\d+)', i)
+            command_list.append(['C', commit_match.group(1), None])
 
 # store the results of three different variations of workload
 read_only_results, read_only_results_to = read_only()

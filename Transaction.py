@@ -37,7 +37,7 @@ class Transaction_TicToc(object):
 
     # Sets the status of the transaction to aborted
     def abort(self):
-        self.status = "Aborted!"
+        self.status = "Aborted"
 
 
 class Transaction_TS(object):
