@@ -1,23 +1,21 @@
 import copy
 import re
 
-import scenarios_to as scenarios
 from Queries import populate_user
-from TO import TimeStamp
+from Tictoc import Tictoc
 from Transaction import Transaction_TS
+from newUI import buildUI
 
+no_transactions = 0
 user_list = populate_user(100, db=True)
 Tran_dict = dict()
 arg_list = dict()
 command_list = list()
 temp_list = copy.deepcopy(user_list)
-algorithm = TimeStamp(temp_list)
-no_transactions = 0
-text = scenarios.scene2.splitlines()
-set_time = 0
+algorithm = Tictoc(temp_list)
 
 
-def initiate_transaction(trx_list):
+def initiate_tictoc(trx_list):
     global set_time
     for i in trx_list:
         set_time += 1
@@ -30,7 +28,7 @@ def algo_parser(text):
     for i in text:
         if re.match(r'^T\d+,', i):
             trx_list = re.findall(r'T(\d)', i)
-            initiate_transaction(trx_list)
+            initiate_tictoc(trx_list)
         elif re.match(r'T\s=\s\d+', i):
             trx_match = re.match(r'T\s=\s(\d+)', i)
             no_transactions = int(trx_match.group(1))
@@ -48,6 +46,7 @@ def algo_parser(text):
             command_list.append(['C', commit_match.group(1), None])
 
 
-algo_parser(text)
+def central_logic(tpcc, ycsb, tictoc, to, user_text, entry_box):
+    print("summa")
 
-algorithm.control_logic(Tran_dict, arg_list, command_list)
+UI = buildUI(900, 300)

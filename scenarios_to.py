@@ -2,7 +2,7 @@
 # This is different from the tictoc only on the first line where
 # we mention the order the transactions have entered the system
 
-# changing T1 and T2 will fail the transaction
+# changing T1 and T2 will fail the transaction T2,T1 will fail
 scene = 'T1,T2\n' \
         'T = 2\n' \
         'X = 0\n' \

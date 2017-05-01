@@ -11,6 +11,7 @@ class TimeStamp(object):
 
     # Goes line by line of the command and handles the overall logic.
     def control_logic(self, trans_dict, arg_list, command_list):
+        print('------------------------------------------------------------------------------')
         for command, transaction, records in command_list:
             t = "T" + str(transaction)
             tran = trans_dict[t]
@@ -27,3 +28,4 @@ class TimeStamp(object):
                 if tran.status != 'Aborted':
                     commit_table(self)
                     print("### Transaction {} successfully validated and COMMITED ###".format(t))
+        print('------------------------------------------------------------------------------')

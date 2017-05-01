@@ -13,8 +13,7 @@ arg_list = dict()
 command_list = list()
 temp_list = copy.deepcopy(user_list)
 algorithm = Tictoc(temp_list)
-text = scenarios.scene7.splitlines()
-
+text = scenarios.scene.splitlines()
 
 def algo_parser(text):
     global no_transactions
@@ -25,11 +24,11 @@ def algo_parser(text):
         elif re.match(r'.\s=\s\d+', i):
             arg_match = re.match(r'(.)\s=\s(\d+)', i)
             arg_list[arg_match.group(1)] = int(arg_match.group(2))
-        elif re.match(r'READ(\d+)\(.\)', i):
-            read_match = re.match(r'READ(\d+)\((.)\)?', i)
+        elif re.match(r'READ(\d+)\(.*\)', i):
+            read_match = re.match(r'READ(\d+)\((.*)\)?', i)
             command_list.append(['R', read_match.group(1), read_match.group(2)])
-        elif re.match(r'WRITE(\d+)\(.\)', i):
-            write_match = re.match(r'WRITE(\d+)\((.)\)?', i)
+        elif re.match(r'WRITE(\d+)\(.*\)', i):
+            write_match = re.match(r'WRITE(\d+)\((.*)\)?', i)
             command_list.append(['W', write_match.group(1), write_match.group(2)])
         elif re.match(r'COMMIT(\d+)', i):
             commit_match = re.match(r'COMMIT(\d+)', i)

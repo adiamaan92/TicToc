@@ -1,72 +1,114 @@
 from Tkinter import *
+#import main
 
 
-# Application class
 class Application(Frame):
+
     def create_widgets(self):
-        # LEFT GRID
-        # algorithms grid
-        self.algo_label = Label(self, text="Please select one algorithm")
+
         self.algo_label.grid(row=0, column=0, columnspan=2, sticky=W)
-        self.c1 = Checkbutton(self, text="TicToc")
-        self.c1.grid(row=1, column=0, columnspan=2, sticky=W)
-        self.c1 = Checkbutton(self, text="TO.py")
-        self.c1.grid(row=2, column=0, columnspan=2, sticky=W)
-        # CENTER GRID
-        # to read text entered in the text box
-        self.usertext = StringVar()
-        # transaction entry box
-        self.label1 = Label(self, text="Please Enter transaction in the given box")
+        self.tictoc.grid(row=1, column=0, columnspan=2, sticky=W)
+        self.to.grid(row=2, column=0, columnspan=2, sticky=W)
+
         self.label1.grid(row=0, column=2, columnspan=2, sticky=W + E + N + S, )
-        self.entrybox = Text(self, width=35, height=10, wrap=WORD)
-        self.entrybox.grid(row=1, column=2, columnspan=2, sticky=W + E + N + S)
-        # adding scrollbar to the box
-        self.scroll = Scrollbar(self, orient="vertical", command=self.entrybox.yview)
+        self.entry_box.grid(row=1, column=2, columnspan=2, sticky=W + E + N + S)
+
         self.scroll.grid(row=1, column=4, columnspan=1, sticky=W + E + N + S)
-        self.entrybox['yscrollcommand'] = "scroll.set"
-        self.button1 = Button(self, text="simulate", fg="black", bg="green")
-        self.button1.grid(row=2, column=2, columnspan=2, sticky=W + E + N + S)
-        # on left clicking simulate execute the function name specified in the parameter
-        # button1.bind("<Button-1", function name)
+        self.entry_box['yscrollcommand'] = "scroll.set"
+        self.submit.grid(row=2, column=2, columnspan=2, sticky=W + E + N + S)
 
-        # RIGHT GRID
-        # Benchmarks grid
-        self.bench_marks = Label(self, text="Please select one Benchmark tool")
         self.bench_marks.grid(row=0, column=5, columnspan=2, sticky=E)
+        self.tpcc.grid(row=1, column=4, columnspan=2, sticky=E)
+        self.ycsb.grid(row=2, column=4, columnspan=2, sticky=E)
 
-        self.c1 = Checkbutton(self, text="YCSB")
-        self.c1.grid(row=1, column=4, columnspan=2, sticky=E)
-        self.c2 = Checkbutton(self, text="TPC-C")
-        self.c2.grid(row=2, column=4, columnspan=2, sticky=E)
+        #self.submit.bind("<Button-1", main.central_logic())
 
-        # Quit button
-        self.Quit = Button(self, text='Exit application', fg="red", bg="black", command=self.quit)
-        self.Quit.grid(row=3, column=2, columnspan=2, sticky=W + E + N + S)
+        self.quit.grid(row=3, column=2, columnspan=2, sticky=W + E + N + S)
 
     def __init__(self, master=None):
-        Frame.__init__(self, master)
+
+
+        self.frame = Frame(master)
+        self.quit = Button(self, text='Exit application', fg="red", bg="black", command=self.quit)
+        Grid.rowconfigure(master, 0, weight=1)
+        Grid.columnconfigure(master, 0, weight=1)
+        #self.frame.grid(row=0, column=0, sticky=N + S + E + W)
+        grid = Frame(self.frame)
+        grid.grid(sticky=N + S + E + W, column=0, row=7, columnspan=2)
+        Grid.rowconfigure(self.frame, 7, weight=1)
+        Grid.columnconfigure(self.frame, 0, weight=1)
+        # self.width = width
+        # self.height = height
+
+        self.tpcc = Checkbutton(self, text="TPC-C")
+        self.ycsb = Checkbutton(self, text="YCSB")
+
+        self.bench_marks = Label(self, text="Please select one Benchmark tool")
+
+        self.submit = Button(self, text="simulate", fg="black", bg="green")
+        self.entry_box = Text(self, width=35, height=10, wrap=WORD)
+        self.scroll = Scrollbar(self, orient="vertical", command=self.entry_box.yview)
+
+        self.label1 = Label(self, text="Please Enter transaction in the given box")
+        self.user_text = StringVar()
+
+        self.to = Checkbutton(self, text="TO.py")
+        self.tictoc = Checkbutton(self, text="TicToc")
+        self.algo_label = Label(self, text="Please select one algorithm")
+
         self.grid()
         self.create_widgets()
 
 
-def center_window(width=100, height=100):
-    # get screen width and height
-    screen_width = root.winfo_screenwidth()
-    screen_height = root.winfo_screenheight()
+class buildUI(object):
 
-    # calculate position x and y coordinates
-    x = (screen_width / 2) - (width / 2)
-    y = (screen_height / 2) - (height / 2)
-    root.geometry('%dx%d+%d+%d' % (width, height, x, y))
+    def __init__(self, width, height):
+        self.root = Tk()
+        self.root.title("Concurrency Simulator")
+        self.root.configure(background="white")
+        self.width = width
+        self.height = height
+        self.start()
+
+    def start(self):
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+        x = (screen_width / 2) - (self.width / 2)
+        y = (screen_height / 2) - (self.height / 2)
+        self.root.geometry('%dx%d+%d+%d' % (self.width, self.height, x, y))
+        self.frame = Frame(self.root)
+        #self.quit = Button(self, text='Exit application', fg="red", bg="black", command=self.quit)
+        Grid.rowconfigure(self.root, 0, weight=1)
+        Grid.columnconfigure(self.root, 0, weight=1)
+        # self.frame.grid(row=0, column=0, sticky=N + S + E + W)
+        grid = Frame(self.frame)
+        grid.grid(sticky=N + S + E + W, column=0, row=7, columnspan=2)
+        Grid.rowconfigure(self.frame, 7, weight=1)
+        Grid.columnconfigure(self.frame, 0, weight=1)
+        # self.width = width
+        # self.height = height
+
+        self.tpcc = Checkbutton(self, text="TPC-C")
+        self.ycsb = Checkbutton(self, text="YCSB")
+
+        self.bench_marks = Label(self, text="Please select one Benchmark tool")
+
+        self.submit = Button(self, text="simulate", fg="black", bg="green")
+        self.entry_box = Text(self, width=35, height=10, wrap=WORD)
+        self.scroll = Scrollbar(self, orient="vertical", command=self.entry_box.yview)
+
+        self.label1 = Label(self, text="Please Enter transaction in the given box")
+        self.user_text = StringVar()
+
+        self.to = Checkbutton(self, text="TO.py")
+        self.tictoc = Checkbutton(self, text="TicToc")
+        self.algo_label = Label(self, text="Please select one algorithm")
+
+        self.grid()
+        self.create_widgets()
+        self.root.destroy()
 
 
-# main window
-root = Tk()
-root.title("Concurrency Simulator")
-root.configure(background="yellow")
-# center_window(650, 400)
-app = Application(master=root)
-# continuously run window
-app.mainloop()
 
-root.destroy()
+
+

@@ -54,7 +54,8 @@ class Transaction_TS(object):
                 if i.wts > self.TS:
                     self.abort()
                     print(
-                    "     The record {} has been written by a later transaction. Hence aborting read".format(check_id))
+                        "     The record {} has been written by a later transaction. Hence aborting read".format(
+                            check_id))
                     return False
                 else:
                     self.TO.dependent_list.append(i)
@@ -69,7 +70,8 @@ class Transaction_TS(object):
                 if i.rts > self.TS:
                     self.abort()
                     print(
-                    "     The record {} has been read by a later transaction. Hence aborting write".format(check_id))
+                        "     The record {} has been read by a later transaction. Hence aborting write".format(
+                            check_id))
                     return False
                 if i.wts > self.TS:
                     pass
