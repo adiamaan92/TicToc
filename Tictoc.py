@@ -57,27 +57,27 @@ class Tictoc(object):
         return True
 
     # Goes line by line of the command and handles the overall logic.
-    def control_logic(self, trans_dict, arg_list, command_list):
+    def control_logic(self, trans_dict, arg_list, command_list, detailed=True):
         set_time = 1
-        print('------------------------------------------------------------------------------')
+        print('------------------------------------------------------------------------------') if detailed else None
         for command, transaction, records in command_list:
             t = "T" + str(transaction)
             tran = trans_dict[t]
             record = arg_list[records] if records is not None else None
             if command == 'R':
                 tran.abort() if self.is_locked(record) else tran.read_element(set_time, record)
-                print("     Transaction {} has read {}th record".format(t, record))
+                print("     Transaction {} has read {}th record".format(t, record)) if detailed else None
                 set_time += 1
             elif command == 'W':
-                print("--- Transaction {} ---".format(t))
+                print("--- Transaction {} ---".format(t)) if detailed else None
                 tran.abort() if self.is_locked(record) else tran.write_element(record, set_time)
-                print("     Transaction {} has written {}th record locally".format(t, record))
+                print("     Transaction {} has written {}th record locally".format(t, record)) if detailed else None
                 set_time += 1
             elif command == 'C':
                 set_time += 1
                 if self.validate_transaction(tran):
                     commit_table(tran)
-                    print("### Transaction {} successfully validated and COMMITED ###".format(t))
+                    print("### Transaction {} successfully validated and COMMITED ###".format(t)) if detailed else None
                 else:
-                    print("!!! Transaction {} has been ABORTED !!!".format(t))
-        print('------------------------------------------------------------------------------')
+                    print("!!! Transaction {} has been ABORTED !!!".format(t)) if detailed else None
+        print('------------------------------------------------------------------------------') if detailed else None
