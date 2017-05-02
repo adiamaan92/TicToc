@@ -12,7 +12,9 @@ import string
 
 
 no_transactions = 0
-user_list = populate_user(1000, db=False)
+data_size = 10000
+contention_size = int(data_size * 0.1)
+user_list = populate_user(data_size, db=False)
 Tran_dict = dict()
 arg_list = dict()
 command_list = list()
@@ -20,21 +22,31 @@ temp_list = copy.deepcopy(user_list)
 algorithm1 = Tictoc(temp_list)
 algorithm2 = TimeStamp(temp_list)
 
+# for randomly generating the data
 myPRNG = Random()
 
 no_of_queries = 8
 no_of_reads = 6
 no_of_writes = no_of_queries - no_of_reads
 hotspot_queries = 0.6
-# no_of_comm_users = 8
 no_of_comm_users = int(math.ceil(no_of_queries * hotspot_queries))
+
+# number of transactions occurring concurrently
+trans_reqd = 20
+
+# number of commit statements in medium contention and
+# high contention of the queries
+count = 0
+
+# Number of times the transaction will get aborted
+abort = 0
 
 
 # To generate the rows which will be common for
 # x% of the queries.
-comm_users = list()
-for i in range(no_of_comm_users):
-    comm_users.append(myPRNG.randint(0, 100))
+comm_user_id = []
+for i in range(contention_size):
+    comm_user_id.append(myPRNG.randint(0, data_size))
 
 
 # To generate the transaction commands for a
@@ -67,6 +79,7 @@ def create_trans(trans_no, flag):
         random.shuffle(trans_command)
 
         return trans_command
+
     elif flag == "med_contention":
         no_of_reads = 6
         no_of_writes = no_of_queries - no_of_reads
@@ -90,7 +103,9 @@ def create_trans(trans_no, flag):
             else:
                 trans_command[i] += str(trans_no) + '(' + not_comm[myPRNG.randint(0, 18 - no_of_comm_users)] + ')\n'
         random.shuffle(trans_command)
+
         return trans_command
+
     else:
         no_of_reads = 4
         no_of_writes = 4
@@ -114,18 +129,20 @@ def create_trans(trans_no, flag):
             else:
                 trans_command[i] += str(trans_no) + '(' + not_comm[myPRNG.randint(0, 18 - no_of_comm_users)] + ')\n'
         random.shuffle(trans_command)
-        # print trans_command
+
         return trans_command
 
-trans_reqd = 10
-count = 0
+
+commit_read_only = 0
+commit_medium_contention = 0
+commit_high_contention = 0
 
 
 # evaluate 3 different variations of the workload
 # Below we will evaluate 3 different variations of workload
 def read_only():
     variable_value = {}
-    global trans_reqd, count
+    global trans_reqd, commit_read_only
     total_trans_read = []
     total_trans_read_to = []
     flag = "read_queries"
@@ -134,6 +151,7 @@ def read_only():
 
     random.shuffle(total_trans_read)
 
+    commit_read_only = len(total_trans_read)
     total_trans_read = ['T = ' + str(trans_reqd) + '\n'] + total_trans_read
     # print total_trans_read
     for i in range(len(total_trans_read)):
@@ -141,8 +159,10 @@ def read_only():
             variable_name = total_trans_read[i].split('(')[1][0]
             if variable_value.has_key(variable_name):
                 continue
+            elif variable_name in ['A', 'B', 'C', 'D', 'E']:
+                variable_value[variable_name] = comm_user_id[myPRNG.randint(0, contention_size-1)]
             else:
-                variable_value[variable_name] = myPRNG.randint(0, 100)
+                variable_value[variable_name] = myPRNG.randint(0, data_size)
     # print variable_value
     for entry in variable_value:
         # print entry, variable_value[entry]
@@ -154,12 +174,12 @@ def read_only():
 
     ycsb_test = ''.join(total_trans_read)
     ycsb_test_to = ''.join(total_trans_read_to)
-    print ycsb_test_to
+    # print ycsb_test_to
     return ycsb_test, ycsb_test_to
 
 
 def medium_contention():
-    global trans_reqd, count
+    global trans_reqd, commit_medium_contention
     variable_value = {}
     total_trans = []
     total_trans_read_to = []
@@ -175,33 +195,36 @@ def medium_contention():
             variable_name = total_trans[i].split('(')[1][0]
             if variable_value.has_key(variable_name):
                 continue
+            elif variable_name in ['A', 'B', 'C', 'D', 'E']:
+                variable_value[variable_name] = comm_user_id[myPRNG.randint(0, contention_size - 1)]
             else:
-                variable_value[variable_name] = myPRNG.randint(0, 100)
+                variable_value[variable_name] = myPRNG.randint(0, data_size)
     # print variable_value
     for entry in variable_value:
         # print entry, variable_value[entry]
         total_trans.insert(1, entry + ' = ' + str(variable_value[entry]) + '\n')
     length = len(total_trans)
     i = 0
-    count = 0
+    commit_medium_contention = 0
     # for i in range(len(total_trans)):
     while i < length:
         if 'WRITE' in total_trans[i]:
             breakup = total_trans[i].split('(')[0][5:]
             total_trans.insert(i + 1, 'COMMIT' + breakup + '\n')
             length += 1
-            count += 1
+            commit_medium_contention += 1
         i += 1
 
     total_trans_read_to = [','.join(['T' + str(i + 1) for i in range(trans_reqd)]) + '\n'] \
                           + total_trans
     ycsb_test_to = ''.join(total_trans_read_to)
     ycsb_test = ''.join(total_trans)
+
     return ycsb_test, ycsb_test_to
 
 
 def high_contention():
-    global trans_reqd, count
+    global trans_reqd, commit_high_contention
     variable_value = {}
     total_trans = []
     flag = "high_contention"
@@ -216,8 +239,10 @@ def high_contention():
             variable_name = total_trans[i].split('(')[1][0]
             if variable_value.has_key(variable_name):
                 continue
+            elif variable_name in ['A', 'B', 'C', 'D', 'E', 'F']:
+                variable_value[variable_name] = comm_user_id[myPRNG.randint(0, contention_size - 1)]
             else:
-                variable_value[variable_name] = myPRNG.randint(0, 100)
+                variable_value[variable_name] = myPRNG.randint(0, data_size)
     # print variable_value
     for entry in variable_value:
         # print entry, variable_value[entry]
@@ -225,20 +250,20 @@ def high_contention():
 
     length = len(total_trans)
     i = 0
-    count = 0
+    commit_high_contention = 0
     # for i in range(len(total_trans)):
     while i < length:
         if 'WRITE' in total_trans[i]:
             breakup = total_trans[i].split('(')[0][5:]
             total_trans.insert(i + 1, 'COMMIT' + breakup + '\n')
             length += 1
-            count += 1
+            commit_high_contention += 1
         i += 1
     total_trans_read_to = [','.join(['T' + str(i + 1) for i in range(trans_reqd)]) + '\n'] \
                           + total_trans
     ycsb_test_to = ''.join(total_trans_read_to)
     ycsb_test = ''.join(total_trans)
-    print ycsb_test
+    # print ycsb_test
     return ycsb_test, ycsb_test_to
 
 
@@ -302,6 +327,7 @@ high_contention_results, high_contention_results_to = high_contention()
 
 # testing and comparing the two algorithms
 def test_tictoc1():
+    global abort, commit_read_only
     text1 = read_only_results.splitlines()
     flag = "tictoc"
     abort = 0
@@ -315,16 +341,17 @@ def test_tictoc1():
     for k, v in Tran_dict.items():
         if v.status == "Aborted":
             abort += 1
-    print ("Total number of commits: " + '\n')
-    print (count)
-    print ("Total number of aborts: " + '\n')
-    print (str(abort) + '\n')
+    print ("Total number of commits: ")
+    print (commit_read_only)
+    print ("Total number of aborts: ")
+    print (str(abort))
     print("Time taken to run tictoc with read only statements" + '\n')
     print("--- %s seconds ---" % (time.time() - start_time))
-    print ('\n')
+    print('\n')
 
 
 def test_tictoc2():
+    global abort, commit_medium_contention
     text2 = medium_contention_results.splitlines()
     flag = "tictoc"
     abort = 0
@@ -338,16 +365,17 @@ def test_tictoc2():
     for k, v in Tran_dict.items():
         if v.status == "Aborted":
             abort += 1
-    print ("Total number of commits: " + '\n')
-    print (count)
-    print ("Total number of aborts: " + '\n')
-    print (str(abort) + '\n')
+    print ("Total number of commits: ")
+    print (commit_medium_contention)
+    print ("Total number of aborts: ")
+    print (str(abort))
     print("Time taken to run tictoc with medium contention level: " + '\n')
     print("--- %s seconds ---" % (time.time() - start_time))
-    print ('\n')
+    print('\n')
 
 
 def test_tictoc3():
+    global abort, commit_high_contention
     text3 = high_contention_results.splitlines()
     flag = "tictoc"
     abort = 0
@@ -361,17 +389,17 @@ def test_tictoc3():
     for k, v in Tran_dict.items():
         if v.status == "Aborted":
             abort += 1
-    print ("Total number of commits: " + '\n')
-    print (count)
-    print ("Total number of aborts: " + '\n')
+    print ("Total number of commits: ")
+    print (commit_high_contention)
+    print ("Total number of aborts: ")
     print (abort)
-    print ('\n')
     print("Time taken to run tictoc with high contention level: " + '\n')
     print("--- %s seconds ---" % (time.time() - start_time))
-    print ('\n')
+    print('\n')
 
 
 def test_to1():
+    global abort, commit_read_only
     text1 = read_only_results_to.splitlines()
     flag = "timestamp"
     abort = 0
@@ -382,56 +410,54 @@ def test_to1():
     for k, v in Tran_dict.items():
         if v.status == "Aborted":
             abort += 1
-    print ("Total number of commits: " + '\n')
-    print (count)
-    print ("Total number of aborts: " + '\n')
+    print ("Total number of commits: ")
+    print (commit_read_only)
+    print ("Total number of aborts: ")
     print (abort)
-    print ('\n')
     print("Time taken to run timestamp with read only statements" + '\n')
     print("--- %s seconds ---" % (time.time() - start_time))
-    print ('\n')
+    print('\n')
 
 
 def test_to2():
+    global abort, commit_medium_contention
     text2 = medium_contention_results_to.splitlines()
     flag = "timestamp"
     abort = 0
     start_time = time.time()
     algo_parser(text2, flag)
-
     algorithm2.control_logic(Tran_dict, arg_list, command_list, detailed=False)
     for k, v in Tran_dict.items():
         if v.status == "Aborted":
             abort += 1
-    print ("Total number of commits: " + '\n')
-    print (count)
-    print ("Total number of aborts: " + '\n')
+    print ("Total number of commits: ")
+    print (commit_medium_contention)
+    print ("Total number of aborts: ")
     print (abort)
-    print ('\n')
     print("Time taken to run timestamp with medium contention level: " + '\n')
     print("--- %s seconds ---" % (time.time() - start_time))
-    print ('\n')
+    print('\n')
 
 
 def test_to3():
+    global abort, commit_high_contention
     text3 = high_contention_results_to.splitlines()
     flag = "timestamp"
     abort = 0
     start_time = time.time()
     algo_parser(text3, flag)
 
-    algorithm2.control_logic(Tran_dict, arg_list, command_list, detailed=False)
+    algorithm2.control_logic(Tran_dict, arg_list, command_list)
     for k, v in Tran_dict.items():
         if v.status == "Aborted":
             abort += 1
-    print ("Total number of commits: " + '\n')
-    print (count)
-    print ("Total number of aborts: " + '\n')
+    print ("Total number of commits: ")
+    print (commit_high_contention)
+    print ("Total number of aborts: ")
     print (abort)
-    print ('\n')
     print("Time taken to run timestamp with high contention level: " + '\n')
     print("--- %s seconds ---" % (time.time() - start_time))
-    print ('\n')
+    print('\n')
 
 
 # Test tictoc algorithms
